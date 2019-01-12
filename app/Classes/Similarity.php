@@ -10,31 +10,21 @@ namespace App\Classes;
 
 class Similarity
 {
-    private static $instance;
-
-    protected $str1;
-    protected $str2;
+    protected $str;
+    protected $strTofind;
     protected $len1;
     protected $len2;
 
-    public static function getInstance()
+    public function setString($str)
     {
-        if (!self::$instance instanceof self) {
-            self::$instance = new self;
-        }
-        return self::$instance;
+        $this->len1 = strlen($str);
+        $this->str = strtolower($str);
     }
 
-    public function setStr1($str1)
+    public function setStringToFind($strTofind)
     {
-        $this->len1 = strlen($str1);
-        $this->str1 = strtolower($str1);
-    }
-
-    public function setStr2($str2)
-    {
-        $this->len2 = strlen($str2);
-        $this->str2 = strtolower($str2);
+        $this->len2 = strlen($strTofind);
+        $this->strTofind = strtolower($strTofind);
     }
 
     public function getPercentage()
@@ -48,11 +38,15 @@ class Similarity
             return 100;
         }
 
-        if ($this->validateStringReversed() === 100) {
+        if ($this->validateContainsString()) {
             return 100;
         }
 
-        if ($this->validateStringChangingLetters() === 100) {
+        if ($this->validateStringReversed()) {
+            return 100;
+        }
+
+        if ($this->validateStringChangingLetters()) {
             return 100;
         }
 
@@ -61,22 +55,22 @@ class Similarity
 
     private function validateStrings()
     {
-        return $this->str1 === $this->str2;
+        return $this->str === $this->strTofind;
     }
 
     private function validateStringReversed()
     {
-        $arrayStr1 = explode(" ", $this->str1);
+        $arrayStr1 = explode(" ", $this->str);
 
         $reversed = array_reverse($arrayStr1);
 
         $reversedStr1 = implode(" ", $reversed);
 
-        if ($reversedStr1 == $this->str2) {
-            return 100;
+        if ($reversedStr1 == $this->strTofind) {
+            return true;
         }
 
-        return 0;
+        return false;
     }
 
     private function validateStringChangingLetters()
@@ -88,20 +82,20 @@ class Similarity
             'z' => 's'
         ];
 
-        $this->len1 = strlen($this->str1);
+        $this->len1 = strlen($this->str);
 
-        $stringChange = $this->str1;
+        $stringChange = $this->str;
 
         for ($i = 0; $i < $this->len1; $i++) {
-            if (isset($arrayListChange[$this->str1[$i]])) {
-                $stringChange[$i] = $arrayListChange[$this->str1[$i]];
+            if (isset($arrayListChange[$this->str[$i]])) {
+                $stringChange[$i] = $arrayListChange[$this->str[$i]];
             }
         }
 
-        if ($stringChange == $this->str2) {
-            return 100;
+        if ($stringChange == $this->strTofind) {
+            return true;
         }
-        return 0;
+        return false;
 
     }
 
@@ -110,9 +104,9 @@ class Similarity
         $max = max($this->len1, $this->len2);
         $similarity = $i = $j = 0;
 
-        while (($i < $this->len1) && isset($this->str2[$j])) {
+        while (($i < $this->len1) && isset($this->strTofind[$j])) {
 
-            if ($this->str1[$i] == $this->str2[$j]) {
+            if ($this->str[$i] == $this->strTofind[$j]) {
 
                 $similarity++;
                 $i++;
@@ -137,5 +131,10 @@ class Similarity
         }
 
         return round($similarity / $max, 2) * 100;
+    }
+
+    private function validateContainsString()
+    {
+        return (strpos($this->strTofind, $this->str) !== false);
     }
 }

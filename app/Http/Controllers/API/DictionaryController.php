@@ -54,18 +54,24 @@ class DictionaryController extends BaseController
 
         $resultArray = Dictionary::findByName($input['name']);
 
-        print_r($resultArray[0]['name']);
-        $similarity = Similarity::getInstance();
-        $similarity->setStr1($input['name']);
-        $similarity->setStr2($resultArray[0]['name']);
-        print_r($similarity->getPercentage());
-        die();
+        $similarity = new Similarity;
 
-        foreach ($resultArray as $word) {
-            $similarity = Similarity::getInstance();
-            $similarity->setStr1($input['name']);
-            $similarity->setStr2($word['name']);
+        foreach ($resultArray as $key => $word) {
+
+            echo "<pre>";
+            print_r($word['name']);
+            echo "</pre>";
+
+            echo "<pre>";
+            print_r($input['name']);
+            echo "</pre>";
+
+            $similarity->setString($word['name']);
+            $similarity->setStringToFind($input['name']);
+
+            echo "<pre>";
             print_r($similarity->getPercentage());
+            echo "</pre>";
 
         }
         die();
