@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('register', 'API\RegisterController@register');
 
-Route::middleware('auth:api')->group( function () {
+Route::middleware('auth:api')->group(function () {
     Route::resource('dictionary', 'API\DictionaryController');
+    Route::post('dictionary/getList', 'API\DictionaryController@getList');
 });

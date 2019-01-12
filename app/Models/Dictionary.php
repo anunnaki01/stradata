@@ -17,4 +17,27 @@ class Dictionary extends Model
         'person_type',
         'type_job'
     ];
+
+
+    static public function findByName($name)
+    {
+        $words = Dictionary::where('name', $name)
+            ->orWhere('name', 'like', '%' . $name . '%');
+
+        $countWords = str_word_count($name);
+
+        if ($countWords > 1) {
+
+            $arrayNames = explode(' ', $name);
+
+            for ($i = 0; $i < count($arrayNames); $i++) {
+
+                if ($arrayNames[$i] != '') {
+                    $words->orWhere('name', 'like', '%' . $arrayNames[$i] . '%');
+                }
+            }
+        }
+
+        return $words->get()->toArray();
+    }
 }
