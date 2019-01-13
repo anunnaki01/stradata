@@ -58,14 +58,6 @@ class DictionaryController extends BaseController
 
         foreach ($resultArray as $key => $word) {
 
-            echo "<pre>";
-            print_r($word['name']);
-            echo "</pre>";
-
-            echo "<pre>";
-            print_r($input['name']);
-            echo "</pre>";
-
             $similarity->setString($word['name']);
             $similarity->setStringToFind($input['name']);
 

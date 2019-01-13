@@ -12,18 +12,14 @@ class Similarity
 {
     protected $str;
     protected $strTofind;
-    protected $len1;
-    protected $len2;
 
     public function setString($str)
     {
-        $this->len1 = strlen($str);
         $this->str = strtolower($str);
     }
 
     public function setStringToFind($strTofind)
     {
-        $this->len2 = strlen($strTofind);
         $this->strTofind = strtolower($strTofind);
     }
 
@@ -34,46 +30,34 @@ class Similarity
 
     private function similarity()
     {
-        if ($this->validateStrings()) {
-            return 100;
-        }
+        $percentages = [];
+        //Caso Cambio de letras
+        $percentages[] = $this->validateStringChangingLetters($this->str, $this->strTofind);
+        //Caso String alreves
+        $percentages[] = $this->validateStringReversed($this->str, $this->strTofind);
+        //Caso comparacion de strings directa
+        $percentages[] = $this->similarityString($this->str, $this->strTofind);
 
-        if ($this->validateContainsString()) {
-            return 100;
-        }
-
-        if ($this->validateStringReversed()) {
-            return 100;
-        }
-
-        if ($this->validateStringChangingLetters()) {
-            return 100;
-        }
-
-        return $this->similarityString();
+        return max($percentages);
     }
 
-    private function validateStrings()
+    private function validateStringReversed($str, $strTofind)
     {
-        return $this->str === $this->strTofind;
+        $arrayStr1 = explode(" ", $strTofind); //Se convierte el string en array
+        $reversed = array_reverse($arrayStr1); //Se voltea el array
+        $reversedStrTofind = implode(" ", $reversed); //Se convierte el array en string
+
+        $percentages = [];
+        $percentages[] = $this->validateStringChangingLetters($str,
+            $reversedStrTofind); //Se obtiene el porcentaje mayor cambiando las letras
+
+        $percentages[] = $this->similarityString($str,
+            $reversedStrTofind); //Se obtiene el porcentaje mayor comparando el string alreves
+
+        return max($percentages);
     }
 
-    private function validateStringReversed()
-    {
-        $arrayStr1 = explode(" ", $this->str);
-
-        $reversed = array_reverse($arrayStr1);
-
-        $reversedStr1 = implode(" ", $reversed);
-
-        if ($reversedStr1 == $this->strTofind) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function validateStringChangingLetters()
+    private function validateStringChangingLetters($str, $strTofind)
     {
         $arrayListChange = [
             'v' => 'b',
@@ -82,59 +66,55 @@ class Similarity
             'z' => 's'
         ];
 
-        $this->len1 = strlen($this->str);
+        $percentages = [];
 
-        $stringChange = $this->str;
+        foreach ($arrayListChange as $key => $value) { //reemplazo letra en el string a la vez
 
-        for ($i = 0; $i < $this->len1; $i++) {
-            if (isset($arrayListChange[$this->str[$i]])) {
-                $stringChange[$i] = $arrayListChange[$this->str[$i]];
+            $newstr = str_replace($key, $value, $str);
+
+            $percentages[] = $this->similarityString($newstr,
+                $strTofind); //se obtienen los porcentajes y se almacenan en un array
+
+            if (end($percentages) === 100) { //si el ultimo porcentaje es 100% se retorna
+                return end($percentages);
             }
         }
 
-        if ($stringChange == $this->strTofind) {
-            return true;
-        }
-        return false;
+        //Se cambian todas las letras en el string y se obtiene el porcentaje
+        $percentages[] = $this->similarityString(str_replace(['b', 'z', 'v', 's'], ['v', 's', 'b', 'z'], $str),
+            $strTofind);
+
+        //se retorna el porcentaje mayor obtenido en este caso
+        return max($percentages);
 
     }
 
-    private function similarityString()
+    private function similarityString($str1, $str2)
     {
-        $max = max($this->len1, $this->len2);
-        $similarity = $i = $j = 0;
+        $len1 = strlen($str1); //se obtiene la longitud del string
+        $len2 = strlen($str2); // se obtiene la longitud del string a buscar
 
-        while (($i < $this->len1) && isset($this->strTofind[$j])) {
+        $max = max($len1, $len2); //se obtiene la maxima longitud entre los dos strings
+        $similarity = $i = $j = 0; //se inicializan las posiciones y el contador de similitud
 
-            if ($this->str[$i] == $this->strTofind[$j]) {
+        while (($i <= $len1) && isset($str2[$j])) {
 
+            if ($str1[$i] == $str2[$j]) {  //se compara letra por letra si las letras son iguales se incrementan las posiciones y el contador
                 $similarity++;
                 $i++;
                 $j++;
-
-            } elseif ($this->len1 < $this->len2) {
-
-                $this->len1++;
+            } elseif ($len1 < $len2) {  //si la segunda cadena es mas larga se incremetan la longitud de la primera cadena y la posicion de la segunda
+                $len1++;
                 $j++;
-
-            } elseif ($this->len1 > $this->len2) {
-
+            } elseif ($len1 > $len2) { //si la primera cadena es mas larga se decrementa la longitud de la primera cadena y se incrementa la posicion de la primera
                 $i++;
-                $this->len1--;
-
-            } else {
-
+                $len1--;
+            } else { //si son iguales las longitudes incrementa la posicion en los dos
                 $i++;
                 $j++;
-
             }
         }
 
         return round($similarity / $max, 2) * 100;
-    }
-
-    private function validateContainsString()
-    {
-        return (strpos($this->strTofind, $this->str) !== false);
     }
 }
