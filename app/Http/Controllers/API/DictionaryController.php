@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Dictionary;
 use Validator;
 use App\Classes\Similarity;
+use App\Classes\FindPercentage;
 
 class DictionaryController extends BaseController
 {
@@ -49,34 +50,17 @@ class DictionaryController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Validation Error.', $validator->errors(), 200);
         }
 
-        $resultArray = Dictionary::findByName($input['name']);
+        $dictionary = Dictionary::findByName($input['name'])->toArray();
+        $findPercentage = new FindPercentage(new Similarity, $dictionary, $input['name'], $input['percentage']);
+        $result = $findPercentage->getRegisters();
 
-        $similarity = new Similarity;
-
-        foreach ($resultArray as $key => $word) {
-
-            $similarity->setString($word['name']);
-            $similarity->setStringToFind($input['name']);
-
-            echo "<pre>";
-            print_r($similarity->getPercentage());
-            echo "</pre>";
-
-        }
-        die();
-
-
-//        $similarity = new Similarity('bAcA','VaCa');
-//        $response = $similarity->getPercentage();
-//        dd($similarity);
-
-        if (is_null($resultArray)) {
-            return $this->sendError('Words not found.');
+        if (empty($result)) {
+            return $this->sendResponse($result, 'Search not found');
         }
 
-        return $this->sendResponse($resultArray, 'Words successfully.');
+        return $this->sendResponse($result, 'Search found');
     }
 }

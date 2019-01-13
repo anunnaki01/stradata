@@ -115,6 +115,6 @@ class Similarity
             }
         }
 
-        return round($similarity / $max, 2) * 100;
+        return round(($similarity / $max) * 100, 2);
     }
 }
