@@ -43,7 +43,7 @@ jQuery(document).ready(function ($) {
     });
 
     $('#add').click(function () {
-
+        $('#modal-add').modal('show');
         $('#dictionary_form')[0].reset();
         $('.modal-title').text("Agregar");
         $('#action').val("add");
@@ -74,7 +74,6 @@ jQuery(document).ready(function ($) {
     function validateResponse(response) {
         alertify.set('notifier', 'position', 'top-right');
 
-        console.log(response);
         if (response.success) {
 
             alertify.success(response.message);

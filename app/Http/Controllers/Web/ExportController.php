@@ -9,7 +9,7 @@ use App\Models\Dictionary;
 
 class ExportController extends Controller
 {
-    public function excel()
+    public function excel(Request $request)
     {
         $users = Dictionary::all();
         Excel::create('users', function($excel) use($users) {
