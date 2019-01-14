@@ -63,4 +63,6 @@ class DictionaryController extends BaseController
 
         return $this->sendResponse($result, 'Search found');
     }
+
+
 }

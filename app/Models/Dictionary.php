@@ -37,7 +37,8 @@ class Dictionary extends Model
                 }
             }
         }
-
-        return $words->get()->toArray();
+        $words->orWhere('name', 'like', '%' . str_replace(['b', 'z', 'v', 's'], ['v', 's', 'b', 'z'], $name) . '%');
+        $words->orWhere('name', 'like', '%' . str_replace(['v', 's', 'b', 'z'], ['b', 'z', 'v', 's'], $name) . '%');
+        return $words->get();
     }
 }

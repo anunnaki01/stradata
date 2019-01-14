@@ -84,6 +84,9 @@ class Similarity
         $percentages[] = $this->similarityString(str_replace(['b', 'z', 'v', 's'], ['v', 's', 'b', 'z'], $str),
             $strTofind);
 
+        $percentages[] = $this->similarityString(str_replace(['v', 's', 'b', 'z'], ['b', 'z', 'v', 's'], $str),
+            $strTofind);
+
         //se retorna el porcentaje mayor obtenido en este caso
         return max($percentages);
 
