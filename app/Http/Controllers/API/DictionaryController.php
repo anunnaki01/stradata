@@ -20,7 +20,6 @@ class DictionaryController extends BaseController
     public function store(Request $request)
     {
         $input = $request->all();
-
         $validator = Validator::make($input, [
             'name' => 'required',
             'departament' => 'required',

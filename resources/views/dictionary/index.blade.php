@@ -1,5 +1,24 @@
 @extends('layouts.app')
+<style>
+    /* Ensure that the demo table scrolls */
+    th, td {
+        white-space: nowrap;
+        font-size: 12px;
 
+    }
+
+    div.table-responsive {
+        margin: 0 auto;
+    }
+
+    div.container {
+        width: 80%;
+    }
+
+    div#formFilter {
+        margin-left: 10px;
+    }
+</style>
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -7,7 +26,8 @@
                 <div class="card">
                     <div class="card-header">Diccionario</div>
                     <br>
-                    <div class="row">
+
+                    <div class="row" id="formFilter">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <labe for="name">Nombre:</labe>
@@ -21,7 +41,7 @@
                                         <input type="number" min="0" max="100" name="percentage" id="percentage"
                                                class="form-control"></div>
                                 </div>
-                                <div class="form-group" align="center">
+                                <div class="form-group">
                                     <br>
                                     <button type="button" name="filter" id="filter" class="btn btn-success">Buscar
                                     </button>
@@ -29,10 +49,20 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12 col-md-offset-2">
+
+                            <button type="button" class="btn btn-primary float-right" id="add" data-toggle="modal" data-target="#modal-add">
+                                Agregar Nuevo
+                            </button>
+                        </div>
+
+                    </div>
                     <br>
                     <div id="table">
                         <div class="table-responsive">
-                            <table id="dictionary" class="table table-bordered table-striped" style="width:100%">
+                            <table id="dictionary" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -42,6 +72,7 @@
                                     <th>Años activo</th>
                                     <th>Tipo de Persona</th>
                                     <th>Tipo de Cargo</th>
+                                    <th>Editar</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -52,45 +83,5 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-
-            var dictionary = $('#dictionary');
-
-            var colums = [
-
-                {data: 'name', name: 'name', width: '30%'},
-
-                {data: 'departament', name: 'departament', width: '5%'},
-
-                {data: 'location', name: 'location', width: '10%'},
-
-                {data: 'municipality', name: 'municipality', width: '5%'},
-
-                {data: 'active_years', name: 'active_years', width: '20%'},
-
-                {data: 'person_type', name: 'person_type', width: '20%'},
-
-                {data: 'type_job', name: 'type_job', width: '20%'},
-            ];
-
-            DICTIONARY.interfaz.loadDataTableDirectory(dictionary, '/api/dictionary', colums);
-
-            $('#filter').click(function () {
-                var name = $('#name').val();
-                var percentage = $('#percentage').val();
-                if (name == '' || percentage == '') {
-                    DICTIONARY.interfaz.loadDataTableDirectory(dictionary, '/api/dictionary', colums);
-                } else {
-                    var filters = {
-                        name: $('#name').val(),
-                        percentage: $('#percentage').val()
-                    };
-                    DICTIONARY.interfaz.filterTable(dictionary, '/api/dictionary/getList', filters, colums)
-                }
-            });
-
-        });
-
-    </script>
+    @include('dictionary.add')
 @endsection
