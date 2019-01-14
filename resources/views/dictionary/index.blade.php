@@ -18,7 +18,22 @@
     div#formFilter {
         margin-left: 10px;
     }
+    div#dictionary_filter {
+        margin-right: 15px;
+    }
+    div#dictionary_length {
+        margin-left: 20px;
+    }
+    .card {
+        background-color: #f1f1f1 !important;
+    }
+
+    button#add {
+        margin-right: 14px;
+    }
+
 </style>
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -54,7 +69,7 @@
                         <div class="col-md-12 col-md-offset-2">
 
                             <button type="button" class="btn btn-primary float-right" id="add" data-toggle="modal" data-target="#modal-add">
-                                Agregar Nuevo
+                                Nuevo
                             </button>
                         </div>
 
@@ -65,14 +80,14 @@
                             <table id="dictionary" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Departamento</th>
-                                    <th>Localidad</th>
-                                    <th>Municipio</th>
-                                    <th>Años activo</th>
-                                    <th>Tipo de Persona</th>
-                                    <th>Tipo de Cargo</th>
-                                    <th>Editar</th>
+                                   <th></th>
+                                   <th></th>
+                                   <th></th>
+                                   <th></th>
+                                   <th></th>
+                                   <th></th>
+                                   <th></th>
+                                   <th>Edit</th>
                                 </tr>
                                 </thead>
                             </table>

@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Dictionary;
 use Validator;
-use App\Classes\Similarity;
-use App\Classes\FindPercentage;
+use App\Classes\Filter;
+
 
 class DictionaryController extends BaseController
 {
     public function index()
     {
-        $products = Dictionary::all();
-        return $this->sendResponse($products->toArray(), 'Registers retrieved successfully.');
+        $filter = new Filter(self::class);
+        return $filter->index();
     }
 
     public function store(Request $request)
@@ -25,43 +25,64 @@ class DictionaryController extends BaseController
             'departament' => 'required',
             'location' => 'required',
             'municipality' => 'required',
-            'active_years' => 'required',
+            'active_years' => 'required|integer',
             'person_type' => 'required',
             'type_job' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
         }
 
         $product = Dictionary::create($input);
 
-        return $this->sendResponse($product->toArray(), 'Register created successfully.');
+        return $this->sendResponse($product->toArray(), 'Datos almacenados correctamente.');
     }
 
     public function getList(Request $request)
+    {
+        $filter = new Filter(self::class);
+        return $filter->filter($request);
+    }
+
+    public function show($id)
+    {
+        $result = Dictionary::find($id);
+
+        if (is_null($result)) {
+            return $this->sendError('Datos no encontrados');
+        }
+
+        return $this->sendResponse($result->toArray(), 'Datos obtenidos correctamente.');
+    }
+
+    public function update(Request $request, Dictionary $dictionary)
     {
         $input = $request->all();
 
         $validator = Validator::make($input, [
             'name' => 'required',
-            'percentage' => 'required|integer',
+            'departament' => 'required',
+            'location' => 'required',
+            'municipality' => 'required',
+            'active_years' => 'required|integer',
+            'person_type' => 'required',
+            'type_job' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), 200);
+            return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
         }
 
-        $dictionary = Dictionary::findByName($input['name'])->toArray();
-        $findPercentage = new FindPercentage(new Similarity, $dictionary, $input['name'], $input['percentage']);
-        $result = $findPercentage->getRegisters();
+        $dictionary->name = $input['name'];
+        $dictionary->departament = $input['departament'];
+        $dictionary->location = $input['location'];
+        $dictionary->municipality = $input['municipality'];
+        $dictionary->active_years = $input['active_years'];
+        $dictionary->person_type = $input['person_type'];
+        $dictionary->type_job = $input['type_job'];
+        $dictionary->save();
 
-        if (empty($result)) {
-            return $this->sendResponse($result, 'Search not found');
-        }
-
-        return $this->sendResponse($result, 'Search found');
+        return $this->sendResponse($dictionary->toArray(), 'Datos actualizados correctamente.');
     }
-
-
 }

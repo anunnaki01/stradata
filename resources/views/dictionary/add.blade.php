@@ -43,7 +43,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="active_years">Años Activo</label>
-                            <input type="text" class="form-control" id="active_years">
+                            <input type="number" min="0" class="form-control" id="active_years">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -57,7 +57,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="name">Tipo de Cargo</label>
-                            <input type="type_job" class="form-control" id="type_job">
+                            <input type="text" class="form-control" id="type_job">
                         </div>
                     </div>
                     <div class="col-md-6">

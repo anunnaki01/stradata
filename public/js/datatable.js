@@ -4,49 +4,90 @@ jQuery(document).ready(function ($) {
 
     var colums = [
 
-        {data: 'name', name: 'name'},
+        {title: 'Nombre', data: 'name', name: 'name'},
 
-        {data: 'departament', name: 'departament'},
+        {title: 'Departamento', data: 'departament', name: 'departament'},
 
-        {data: 'location', name: 'location'},
+        {title: 'Localidad', data: 'location', name: 'location'},
 
-        {data: 'municipality', name: 'municipality'},
+        {title: 'Municipio', data: 'municipality', name: 'municipality'},
 
-        {data: 'active_years', name: 'active_years'},
+        {title: 'Años Activo', data: 'active_years', name: 'active_years'},
 
-        {data: 'person_type', name: 'person_type'},
+        {title: 'Tipo de Persona', data: 'person_type', name: 'person_type'},
 
-        {data: 'type_job', name: 'type_job'},
+        {title: 'Tipo de Trabajo', data: 'type_job', name: 'type_job'},
         {
-            data: null,
-            className: "center",
-            defaultContent: '<a href="" class="editor_edit">Editar</a>'
+            mRender: function (data, type, row) {
+                return '<a href="#" class="edit" data-id="' + row.id + '"><i class="icon-edit"></i>Edit</a>'
+            }
         }
     ];
 
-    DICTIONARY.interfaz.loadDataTableDirectory(dictionary, '/api/dictionary', colums);
+    DICTIONARY.interfaz.filterTable(dictionary, '/dictionaryList', 'GET', '', colums);
 
     $('#filter').click(function () {
+
         var name = $('#name').val();
         var percentage = $('#percentage').val();
+
         if (name == '' || percentage == '') {
-            DICTIONARY.interfaz.loadDataTableDirectory(dictionary, '/api/dictionary', colums);
+            DICTIONARY.interfaz.filterTable(dictionary, '/dictionaryList', 'GET', '', colums);
         } else {
             var filters = {
                 name: $('#name').val(),
                 percentage: $('#percentage').val()
             };
-            DICTIONARY.interfaz.filterTable(dictionary, '/api/dictionary/getList', filters, colums)
+            DICTIONARY.interfaz.filterTable(dictionary, '/dictionaryListFilter', 'GET', filters, colums);
         }
     });
 
-
     $('#add').click(function () {
+
         $('#dictionary_form')[0].reset();
         $('.modal-title').text("Agregar");
         $('#action').val("add");
         $('#operation').val("add");
     });
+
+    $(document).on('click', '.edit', function () {
+
+        var id = $(this).attr("data-id");
+
+        DICTIONARY.interfaz.requestApi('/api/dictionary/' + id, 'GET', '', function (data) {
+            $('#modal-add').modal('show');
+            $('.modal-title').text("Editar");
+            $('#action').val("edit");
+            $('#operation').val("edit");
+
+            $('#id').val(data.data.id);
+            $('#nameForm').val(data.data.name);
+            $('#departament').val(data.data.departament);
+            $('#location').val(data.data.location);
+            $('#municipality').val(data.data.municipality);
+            $('#active_years').val(data.data.active_years);
+            $('#person_type').val(data.data.person_type);
+            $('#type_job').val(data.data.type_job);
+        });
+    });
+
+    function validateResponse(response) {
+        alertify.set('notifier', 'position', 'top-right');
+
+        console.log(response);
+        if (response.success) {
+
+            alertify.success(response.message);
+            $('#dictionary_form')[0].reset();
+            $('#modal-add').modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            dictionary.DataTable().ajax.reload();
+
+        } else {
+            alertify.error(response.message);
+        }
+    }
 
     $(document).on('submit', '#dictionary_form', function (event) {
         event.preventDefault();
@@ -61,9 +102,17 @@ jQuery(document).ready(function ($) {
             type_job: $('#type_job').val(),
         };
 
-        DICTIONARY.interfaz.store(dictionary, '/api/dictionary', data)
+        var action = $('#action').val();
 
+        if (action == 'add') {
+            DICTIONARY.interfaz.requestApi('/api/dictionary', 'POST', data, function (response) {
+                validateResponse(response);
+            })
+        } else if (action == 'edit') {
+            DICTIONARY.interfaz.requestApi('/api/dictionary/' + $('#id').val(), 'PUT', data, function (response) {
+                validateResponse(response);
+            })
+        }
     });
-
 });
 

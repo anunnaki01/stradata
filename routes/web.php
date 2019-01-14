@@ -11,15 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/dictionary', function (){
+Route::group(['middleware' => ['auth:web']], function () {
 
-    return view('dictionary.index');
+    Route::get('/', function () {
+        return view('dictionary.index');
+    });
+    Route::get('/dictionaryList', 'Web\DictionaryController@index')->name('dictionaryList');
+
+    Route::get('/dictionaryListFilter', 'Web\DictionaryController@filter')->name('dictionaryFilter');
+
+    Route::get('/', function () {
+        return view('dictionary.index');
+    });
+
+    Route::get('/excel', 'Web\ExportController@excel')->name('exportExcel');
+
+
 });
