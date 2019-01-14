@@ -21,5 +21,6 @@ Route::post('register', 'API\RegisterController@register');
 
 Route::middleware('auth:api')->group(function () {
     Route::resource('dictionary', 'API\DictionaryController');
-    Route::post('dictionary/getList', 'API\DictionaryController@getList');
+    Route::get('dictionary/getList', 'API\DictionaryController@getList');
+
 });

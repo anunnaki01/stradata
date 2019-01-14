@@ -6,17 +6,57 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Dictionary;
 use Validator;
-use App\Classes\Similarity;
+use App\Classes\Filter;
+
 
 class DictionaryController extends BaseController
 {
     public function index()
     {
-        $products = Dictionary::all();
-        return $this->sendResponse($products->toArray(), 'Registers retrieved successfully.');
+        $filter = new Filter(self::class);
+        return $filter->index();
     }
 
     public function store(Request $request)
+    {
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required',
+            'departament' => 'required',
+            'location' => 'required',
+            'municipality' => 'required',
+            'active_years' => 'required|integer',
+            'person_type' => 'required',
+            'type_job' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
+        }
+
+        $product = Dictionary::create($input);
+
+        return $this->sendResponse($product->toArray(), 'Datos almacenados correctamente.');
+    }
+
+    public function getList(Request $request)
+    {
+        $filter = new Filter(self::class);
+        return $filter->filter($request);
+    }
+
+    public function show($id)
+    {
+        $result = Dictionary::find($id);
+
+        if (is_null($result)) {
+            return $this->sendError('Datos no encontrados');
+        }
+
+        return $this->sendResponse($result->toArray(), 'Datos obtenidos correctamente.');
+    }
+
+    public function update(Request $request, Dictionary $dictionary)
     {
         $input = $request->all();
 
@@ -25,58 +65,24 @@ class DictionaryController extends BaseController
             'departament' => 'required',
             'location' => 'required',
             'municipality' => 'required',
-            'active_years' => 'required',
+            'active_years' => 'required|integer',
             'person_type' => 'required',
             'type_job' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
         }
 
-        $product = Dictionary::create($input);
+        $dictionary->name = $input['name'];
+        $dictionary->departament = $input['departament'];
+        $dictionary->location = $input['location'];
+        $dictionary->municipality = $input['municipality'];
+        $dictionary->active_years = $input['active_years'];
+        $dictionary->person_type = $input['person_type'];
+        $dictionary->type_job = $input['type_job'];
+        $dictionary->save();
 
-        return $this->sendResponse($product->toArray(), 'Register created successfully.');
-    }
-
-    public function getList(Request $request)
-    {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'percentage' => 'required|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
-        }
-
-        $resultArray = Dictionary::findByName($input['name']);
-
-        $similarity = new Similarity;
-
-        foreach ($resultArray as $key => $word) {
-
-            $similarity->setString($word['name']);
-            $similarity->setStringToFind($input['name']);
-
-            echo "<pre>";
-            print_r($similarity->getPercentage());
-            echo "</pre>";
-
-        }
-        die();
-
-
-//        $similarity = new Similarity('bAcA','VaCa');
-//        $response = $similarity->getPercentage();
-//        dd($similarity);
-
-        if (is_null($resultArray)) {
-            return $this->sendError('Words not found.');
-        }
-
-        return $this->sendResponse($resultArray, 'Words successfully.');
+        return $this->sendResponse($dictionary->toArray(), 'Datos actualizados correctamente.');
     }
 }
