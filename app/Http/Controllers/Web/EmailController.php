@@ -8,38 +8,40 @@ use Validator;
 use App\Classes\Filter;
 use App\Classes\Export;
 use App\Http\Controllers\API\BaseController as BaseController;
+use Auth;
+use App\Classes\Email;
 
-
-class ExportController extends BaseController
+class EmailController extends BaseController
 {
     protected $filter;
     protected $export;
+    protected $email;
 
     public function __construct()
     {
         $this->filter = new Filter();
         $this->export = new Export();
+        $this->email = new Email();
     }
 
-    public function export($type, $name = '', $percentage = '')
+    public function send($type, $name = '', $percentage = '')
     {
+        $data = $this->getExportData($type, $name, $percentage);
+
         if ($type == 'excel') {
-            return $this->excel($type, $name, $percentage);
+            $file = $this->export->getExcelFile($data, 'Report');
+            $response = $this->email->sendExcelFile($file);
         } elseif ($type == 'pdf') {
-            return $this->pdf($type, $name, $percentage);
+            $file = $this->export->getPdfFile($data);
+            $response = $this->email->sendPdfFile($file);
         }
-    }
 
-    private function excel($type, $name = '', $percentage = '')
-    {
-        $data = $this->getExportData($type, $name, $percentage);
-        $this->export->excel($data, 'Registros');
-    }
+        if ($response) {
+            return $this->sendResponse([], 'Reporte enviado correctamente');
+        }
 
-    public function pdf($type, $name = '', $percentage = '')
-    {
-        $data = $this->getExportData($type, $name, $percentage);
-        return $this->export->pdf($data, 'Registros');
+        return $this->sendError('Ha ocurrido un error, porfavor intente mas tarde', 200);
+
     }
 
     private function getExportData($type, $name, $percentage)

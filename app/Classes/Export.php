@@ -15,11 +15,17 @@ class Export
 {
     public function excel(array $data, $fileName)
     {
-        Excel::create($fileName, function ($excel) use ($data) {
-            $excel->sheet('Sheetname', function ($sheet) use ($data) {
-                $sheet->fromArray($data);
+        return $this->getExcelFile($data, $fileName)->export('xls');
+    }
+
+    public function getExcelFile($data, $fileName)
+    {
+        return Excel::create($fileName,
+            function ($excel) use ($data) {
+                $excel->sheet('Sheetname', function ($sheet) use ($data) {
+                    $sheet->fromArray($data);
+                });
             });
-        })->export('xls');
     }
 
     public function pdf($data, $fileName)
@@ -27,5 +33,11 @@ class Export
         $pdf = PDF::loadView('pdf.export', compact('data'));
         //$pdf->save(storage_path().'/' . $fileName . '.pdf');
         return $pdf->download($fileName . '.pdf');
+    }
+
+    public function getPdfFile($data)
+    {
+        $pdf = PDF::loadView('pdf.export', compact('data'));
+        return $pdf->output();
     }
 }

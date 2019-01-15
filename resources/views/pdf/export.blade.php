@@ -1,11 +1,5 @@
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-</head>
-<body>
 <h1>Registros</h1>
-<table>
+<table style="border-collapse:collapse; width: 100%;">
     <thead>
     <tr>
         <th>Nombre</th>
@@ -31,5 +25,3 @@
     @endforeach
     </tbody>
 </table>
-</body>
-</html>
