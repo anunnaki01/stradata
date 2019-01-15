@@ -72,18 +72,19 @@
                                 <option value="pdf">Pdf</option>
                             </select>
                         </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-info float-right" id="export">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-info" id="export">
                                 Exportar
                             </button>
+                            <button type="button" class="btn btn-info" id="sendEmail">
+                                Email
+                            </button>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-6">
 
                             <button type="button" class="btn btn-primary float-right" id="add">
                                 Nuevo
                             </button>
-
-
                         </div>
 
                     </div>

@@ -120,7 +120,24 @@ jQuery(document).ready(function ($) {
         var name = $('#name').val();
         var percentage = $('#percentage').val();
         window.location.assign('/export/' + type + '/' + name + '/' + percentage);
+    });
 
+    $('#sendEmail').click(function () {
+        var type = $('#export_type').val();
+        var name = $('#name').val();
+        var percentage = $('#percentage').val();
+        var url = '/send/' + type + '/' + name + '/' + percentage;
+
+        DICTIONARY.interfaz.requestApi(url, 'GET', '', function (response) {
+            alertify.set('notifier', 'position', 'top-right');
+
+            if (response.success) {
+                alertify.success(response.message);
+            }
+            else {
+                alertify.error(response.message);
+            }
+        });
     });
 
 });

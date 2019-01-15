@@ -13,11 +13,7 @@
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/export/{type}/{name?}/{percentage?}', 'Web\ExportController@export')->where('percentage', '[0-9]+')
-    ->name('export');
-
+//Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth:web']], function () {
 
@@ -32,5 +28,9 @@ Route::group(['middleware' => ['auth:web']], function () {
         return view('dictionary.index');
     });
 
+    Route::get('/export/{type}/{name?}/{percentage?}', 'Web\ExportController@export')->where('percentage', '[0-9]+')
+        ->name('export');
 
+    Route::get('/send/{type}/{name?}/{percentage?}', 'Web\EmailController@send')->where('percentage', '[0-9]+')
+        ->name('email');
 });
