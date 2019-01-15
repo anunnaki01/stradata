@@ -15,6 +15,8 @@ class Export
 {
     public function excel(array $data, $fileName)
     {
+        header('Set-Cookie: fileDownload=true; path=/');
+
         return $this->getExcelFile($data, $fileName)->export('xls');
     }
 
@@ -30,8 +32,12 @@ class Export
 
     public function pdf($data, $fileName)
     {
+        ini_set('max_execution_time', 0);
+        set_time_limit(0);
+
         $pdf = PDF::loadView('pdf.export', compact('data'));
         //$pdf->save(storage_path().'/' . $fileName . '.pdf');
+        $pdf->setPaper('A4', 'landscape');
         return $pdf->download($fileName . '.pdf');
     }
 

@@ -15,6 +15,9 @@ Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('home');
 
+Route::post('importFile', 'Web\ImportController@import')->name('importFile');
+
+
 Route::group(['middleware' => ['auth:web']], function () {
 
     Route::get('/', function () {
@@ -33,4 +36,5 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     Route::get('/send/{type}/{name?}/{percentage?}', 'Web\EmailController@send')->where('percentage', '[0-9]+')
         ->name('email');
+
 });

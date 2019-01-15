@@ -10,7 +10,7 @@ Una vez clonado el repositorio en un ambiente con los requerimientos y configura
 
 -php artisan migrate
 
--php artisa db:seed
+-php artisan db:seed
 
 -php artisan passport:install
 
