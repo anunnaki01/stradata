@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="col-md-12 col-md-offset-2">
 
-                            <button type="button" class="btn btn-primary float-right" id="add" data-toggle="modal" data-target="#modal-add">
+                            <button type="button" class="btn btn-primary float-right" id="add">
                                 Nuevo
                             </button>
                         </div>
