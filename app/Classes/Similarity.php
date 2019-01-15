@@ -8,6 +8,8 @@
 
 namespace App\Classes;
 
+use Mockery\Exception;
+
 class Similarity
 {
     protected $str;
@@ -43,18 +45,32 @@ class Similarity
 
     private function validateStringReversed($str, $strTofind)
     {
-        $arrayStr1 = explode(" ", $strTofind); //Se convierte el string en array
-        $reversed = array_reverse($arrayStr1); //Se voltea el array
-        $reversedStrTofind = implode(" ", $reversed); //Se convierte el array en string
+        $reversedStrTofind = $this->reverseString($strTofind);
 
         $percentages = [];
+
         $percentages[] = $this->validateStringChangingLetters($str,
             $reversedStrTofind); //Se obtiene el porcentaje mayor cambiando las letras
 
         $percentages[] = $this->similarityString($str,
             $reversedStrTofind); //Se obtiene el porcentaje mayor comparando el string alreves
 
+        $reversedStr2 = $this->reverseString($str);
+
+        $percentages[] = $this->validateStringChangingLetters($reversedStr2,
+            $strTofind); //Se obtiene el porcentaje mayor cambiando las letras
+
+        $percentages[] = $this->similarityString($reversedStr2,
+            $strTofind); //Se obtiene el porcentaje mayor comparando el string alreves
+
         return max($percentages);
+    }
+
+    private function reverseString($string)
+    {
+        $arrayStr = explode(" ", $string); //Se convierte el string en array
+        $reversed = array_reverse($arrayStr); //Se voltea el array
+        return implode(" ", $reversed); //Se convierte el array en string
     }
 
     private function validateStringChangingLetters($str, $strTofind)
@@ -99,10 +115,9 @@ class Similarity
 
         $max = max($len1, $len2); //se obtiene la maxima longitud entre los dos strings
         $similarity = $i = $j = 0; //se inicializan las posiciones y el contador de similitud
-
         while (($i <= $len1) && isset($str2[$j])) {
 
-            if ($str1[$i] == $str2[$j]) {  //se compara letra por letra si las letras son iguales se incrementan las posiciones y el contador
+            if (isset($str1[$i]) && isset($str2[$j]) && $str1[$i] == $str2[$j]) {  //se compara letra por letra si las letras son iguales se incrementan las posiciones y el contador
                 $similarity++;
                 $i++;
                 $j++;
@@ -117,7 +132,6 @@ class Similarity
                 $j++;
             }
         }
-
         return round(($similarity / $max) * 100, 2);
     }
 }
