@@ -115,6 +115,7 @@ class Similarity
 
         $max = max($len1, $len2); //se obtiene la maxima longitud entre los dos strings
         $similarity = $i = $j = 0; //se inicializan las posiciones y el contador de similitud
+        
         while (($i <= $len1) && isset($str2[$j])) {
 
             if (isset($str1[$i]) && isset($str2[$j]) && $str1[$i] == $str2[$j]) {  //se compara letra por letra si las letras son iguales se incrementan las posiciones y el contador
