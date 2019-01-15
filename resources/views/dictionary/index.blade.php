@@ -76,9 +76,9 @@
                             </select>
                         </div>
                         <div class="col-md-4" id="reports">
-                            <button type="button" class="btn btn-info" id="export">
+                            <a href="#" class="btn btn-info" id="export">
                                 Exportar
-                            </button>
+                            </a>
                             <button type="button" class="btn btn-info" id="sendEmail">
                                 Email
                             </button>

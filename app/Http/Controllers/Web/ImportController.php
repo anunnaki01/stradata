@@ -20,16 +20,15 @@ class ImportController extends BaseController
         \Excel::load($file, function ($reader) {
 
             $reader->get();
-            $dictionary = new Dictionary;
+            $reader->each(function ($row) {
 
-            $reader->each(function ($row) use ($dictionary) {
+                $exist = Dictionary::where('name', $row->nombre)->get()->first();
 
-                $exist = $dictionary->where('name', $row->nombre)->get()->first();
-                
                 if (!empty($exist)) {
                     $exist->updated_at = date("Y-m-d H:i:s");
                     $exist->save();
                 } else {
+                    $dictionary = new Dictionary;
                     $dictionary->name = $row->nombre;
                     $dictionary->departament = $row->departamento;
                     $dictionary->location = $row->localidad;

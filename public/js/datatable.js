@@ -116,16 +116,25 @@ jQuery(document).ready(function ($) {
             }
         });
 
-        $('#export').click(function () {
+        $(document).on("click", "a#export", function () {
             var _this = $(this);
             var type = $('#export_type').val();
             var name = $('#name').val();
             var percentage = $('#percentage').val();
-            _this.text('Exportando...');
-            _this.prop('disabled', true);
-            window.location.assign('/export/' + type + '/' + name + '/' + percentage);
-            _this.text('Email').prop('disabled', false);
+
+            _this.text('Exportando...').prop('disabled', true);
+            $.fileDownload('/export/' + type + '/' + name + '/' + percentage, {
+                successCallback: function (url) {
+                    _this.text('Exportar').prop('disabled', false);
+                },
+                failCallback: function (responseHtml, url) {
+                    _this.text('Exportar').prop('disabled', false);
+                }
+            })
+
+            return false; //this is critical to stop the click event which will trigger a normal file download
         });
+
 
         $('#sendEmail').click(function () {
             var _this = $(this);

@@ -15,7 +15,7 @@ DICTIONARY.interfaz = (function () {
                     'data': data
                 },
                 columns: columns,
-                scrollY: "300px",
+                scrollY: "400px",
                 scrollX: true,
                 columnDefs: [
                     {width: 200, targets: 0}
