@@ -15,7 +15,8 @@ class Dictionary extends Model
         'municipality',
         'active_years',
         'person_type',
-        'type_job'
+        'type_job',
+        'updated_at'
     ];
 
 

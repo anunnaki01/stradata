@@ -45,6 +45,7 @@ class ExportController extends BaseController
     private function getExportData($type, $name, $percentage)
     {
         $input = ['type' => $type, 'name' => $name, 'percentage' => $percentage];
+
         $validator = Validator::make($input, ['type' => 'required']);
 
         if ($validator->fails()) {

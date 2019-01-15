@@ -18,12 +18,15 @@
     div#formFilter {
         margin-left: 10px;
     }
+
     div#dictionary_filter {
         margin-right: 15px;
     }
+
     div#dictionary_length {
         margin-left: 20px;
     }
+
     .card {
         background-color: #f1f1f1 !important;
     }
@@ -67,12 +70,12 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-2">
-                            <select  class="form-control float-right"  name="export_type" id="export_type">
+                            <select class="form-control float-right" name="export_type" id="export_type">
                                 <option value="excel">Excel</option>
                                 <option value="pdf">Pdf</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" id="reports">
                             <button type="button" class="btn btn-info" id="export">
                                 Exportar
                             </button>
@@ -85,6 +88,9 @@
                             <button type="button" class="btn btn-primary float-right" id="add">
                                 Nuevo
                             </button>
+                            <button type="button" class="btn btn-secondary float-right" id="import">
+                                Importar
+                            </button>
                         </div>
 
                     </div>
@@ -94,14 +100,14 @@
                             <table id="dictionary" class="table table-striped table-bordered" style="width:100%">
                                 <thead>
                                 <tr>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th></th>
-                                   <th>Edit</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Edit</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -113,4 +119,5 @@
         </div>
     </div>
     @include('dictionary.add')
+    @include('dictionary.import')
 @endsection

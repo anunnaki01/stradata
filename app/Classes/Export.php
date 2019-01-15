@@ -30,8 +30,10 @@ class Export
 
     public function pdf($data, $fileName)
     {
+        dd(phpinfo());
         $pdf = PDF::loadView('pdf.export', compact('data'));
         //$pdf->save(storage_path().'/' . $fileName . '.pdf');
+        dd($pdf->download($fileName . '.pdf'));
         return $pdf->download($fileName . '.pdf');
     }
 
