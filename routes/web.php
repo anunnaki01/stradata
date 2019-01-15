@@ -15,6 +15,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/export/{type}/{name?}/{percentage?}', 'Web\ExportController@export')->where('percentage', '[0-9]+')
+    ->name('export');
+
+
 Route::group(['middleware' => ['auth:web']], function () {
 
     Route::get('/', function () {
@@ -27,8 +31,6 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/', function () {
         return view('dictionary.index');
     });
-
-    Route::get('/excel', 'Web\ExportController@excel')->name('exportExcel');
 
 
 });

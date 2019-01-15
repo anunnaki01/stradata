@@ -7,14 +7,21 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Dictionary;
 use Validator;
 use App\Classes\Filter;
-
+use Excel;
 
 class DictionaryController extends BaseController
 {
+    protected $filter;
+
+    public function __construct()
+    {
+        $this->filter = new Filter();
+    }
+
     public function index()
     {
-        $filter = new Filter(self::class);
-        return $filter->index();
+        return $this->sendResponse($this->filter->all(),
+            'Registers retrieved successfully.');
     }
 
     public function store(Request $request)
@@ -41,8 +48,20 @@ class DictionaryController extends BaseController
 
     public function getList(Request $request)
     {
-        $filter = new Filter(self::class);
-        return $filter->filter($request);
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'name' => 'required',
+            'percentage' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
+        }
+
+        $response = $this->filter->filter($input);
+
+        return $this->sendResponse($response, 'Busqueda encontrada');
     }
 
     public function show($id)

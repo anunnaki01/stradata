@@ -3,27 +3,39 @@
 namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Validator;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Classes\Filter;
 
 
-class DictionaryController extends Controller
+class DictionaryController extends BaseController
 {
+    protected $filter;
+
     public function __construct()
     {
-        $baseController = new BaseController;
-        $this->filter = new Filter($baseController);
+        $this->filter = new Filter();
     }
 
     public function index()
     {
-        return $this->filter->index();
+        return $this->sendResponse($this->filter->all(),
+            'Registers retrieved successfully.');
     }
 
     public function filter(Request $request)
     {
-        return $this->filter->filter($request);
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required',
+            'percentage' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
+        }
+        $response = $this->filter->filter($input);
+        return $this->sendResponse($response, 'Busqueda encontrada');
+
     }
 }

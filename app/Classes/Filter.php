@@ -8,47 +8,24 @@
 
 namespace App\Classes;
 
-use Illuminate\Http\Request;
 use Validator;
-use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\Dictionary;
 
 class Filter
 {
-    public function __construct(BaseController $baseController)
-    {
-        $this->baseController = $baseController;
-    }
-
-    public function index()
+    public function all()
     {
         $result = Dictionary::all();
-        return $this->baseController->sendResponse($this->ucfirstArray($result->toArray()),
-            'Registers retrieved successfully.');
+        return $this->ucfirstArray($result->toArray());
     }
 
-    public function filter(Request $request)
+    public function filter($input)
     {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'percentage' => 'required|integer',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->baseController->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
-        }
-
         $dictionary = Dictionary::findByName($input['name'])->toArray();
         $findPercentage = new FindPercentage(new Similarity, $dictionary, $input['name'], $input['percentage']);
         $result = $findPercentage->getRegisters();
 
-        if (empty($result)) {
-            return $this->baseController->sendResponse($result, 'Busqueda no encontrada');
-        }
-
-        return $this->baseController->sendResponse($this->ucfirstArray($result), 'Busqueda encontrada');
+        return $this->ucfirstArray($result);
     }
 
     private function ucfirstArray($array)

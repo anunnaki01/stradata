@@ -22,5 +22,6 @@ Route::post('register', 'API\RegisterController@register');
 Route::middleware('auth:api')->group(function () {
     Route::resource('dictionary', 'API\DictionaryController');
     Route::get('dictionary/getList', 'API\DictionaryController@getList');
+    Route::get('dictionary/export/{type}/{name?}/{percentage?}', 'API\DictionaryController@export')->where('percentage', '[0-9]+');
 
 });

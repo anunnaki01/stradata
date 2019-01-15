@@ -66,11 +66,24 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-md-12 col-md-offset-2">
+                        <div class="col-md-2">
+                            <select  class="form-control float-right"  name="export_type" id="export_type">
+                                <option value="excel">Excel</option>
+                                <option value="pdf">Pdf</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-info float-right" id="export">
+                                Exportar
+                            </button>
+                        </div>
+                        <div class="col-md-9">
 
-                            <button type="button" class="btn btn-primary float-right" id="add" data-toggle="modal" data-target="#modal-add">
+                            <button type="button" class="btn btn-primary float-right" id="add">
                                 Nuevo
                             </button>
+
+
                         </div>
 
                     </div>
