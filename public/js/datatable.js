@@ -1,6 +1,7 @@
 jQuery(document).ready(function ($) {
 
     var dictionary = $('#dictionary');
+    var modal = $('#modal-add');
 
     var colums = [
 
@@ -43,7 +44,7 @@ jQuery(document).ready(function ($) {
     });
 
     $('#add').click(function () {
-        $('#modal-add').modal('show');
+        modal.modal('show');
         $('#dictionary_form')[0].reset();
         $('.modal-title').text("Agregar");
         $('#action').val("add");
@@ -55,7 +56,7 @@ jQuery(document).ready(function ($) {
         var id = $(this).attr("data-id");
 
         DICTIONARY.interfaz.requestApi('/api/dictionary/' + id, 'GET', '', function (data) {
-            $('#modal-add').modal('show');
+            modal.modal('show');
             $('.modal-title').text("Editar");
             $('#action').val("edit");
             $('#operation').val("edit");
@@ -78,7 +79,7 @@ jQuery(document).ready(function ($) {
 
             alertify.success(response.message);
             $('#dictionary_form')[0].reset();
-            $('#modal-add').modal('hide');
+            modal.modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
             dictionary.DataTable().ajax.reload();
@@ -113,5 +114,14 @@ jQuery(document).ready(function ($) {
             })
         }
     });
+
+    $('#export').click(function () {
+        var type = $('#export_type').val();
+        var name = $('#name').val();
+        var percentage = $('#percentage').val();
+        window.location.assign('/export/' + type + '/' + name + '/' + percentage);
+
+    });
+
 });
 

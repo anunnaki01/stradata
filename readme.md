@@ -7,7 +7,13 @@ Se debe crear la base de datos MYSQL y configurar los accesos de la applicacion 
 Una vez clonado el repositorio en un ambiente con los requerimientos y configurada la base de datos se ejecutar los sigientes comandos:
 
 -composer update
+
 -php artisan migrate
+
 -php artisa db:seed
+
 -php artisan passport:install
- 
+
+-php artisan vendor:publish  (seleccionando "Provider: Barryvdh\DomPDF\ServiceProvider" )
+
+
