@@ -35,7 +35,7 @@ class DictionaryController extends BaseController
             return $this->sendError('Error en la validacion de los campos.', $validator->errors(), 200);
         }
         $response = $this->filter->filter($input);
-        return $this->sendResponse($response, 'Busqueda encontrada');
+        return $this->sendResponse($response, 'Busqueda Realizada');
 
     }
 }
