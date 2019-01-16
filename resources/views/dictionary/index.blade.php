@@ -35,6 +35,13 @@
         margin-right: 14px;
     }
 
+    select#export_type {
+        width: 90px;
+        margin-left: 20px;
+        float: left;
+        margin-right: 5px;
+    }
+
 </style>
 
 @section('content')
@@ -69,23 +76,22 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-md-2">
-                            <select class="form-control float-right" name="export_type" id="export_type">
+                        <div class="col-md-6">
+                            <select class="form-control" name="export_type" id="export_type">
                                 <option value="excel">Excel</option>
                                 <option value="pdf">Pdf</option>
                             </select>
-                        </div>
-                        <div class="col-md-4" id="reports">
-                            <a href="#" class="btn btn-info" id="export">
+                            <button class="btn btn-dark" id="export">
                                 Exportar
-                            </a>
-                            <button type="button" class="btn btn-info" id="sendEmail">
-                                Email
+                            </button>
+                            <button type="button" class="btn btn-dark" id="sendEmail">
+                                Enviar al correo
                             </button>
                         </div>
                         <div class="col-md-6">
 
-                            <button type="button" class="btn btn-primary float-right" id="add">
+                            <button type="button" class="btn btn-primary float-right" id="add"
+                                    onclick="DICTIONARY.utilities.openModalSave()">
                                 Nuevo
                             </button>
                             <button type="button" class="btn btn-secondary float-right" id="import">
@@ -94,6 +100,7 @@
                         </div>
 
                     </div>
+                    <hr>
                     <br>
                     <div id="table">
                         <div class="table-responsive">

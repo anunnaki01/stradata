@@ -1,7 +1,8 @@
+var DICTIONARY = DICTIONARY || {};
+
 jQuery(document).ready(function ($) {
 
-        var dictionary = $('#dictionary');
-        var modal = $('#modal-add');
+    DICTIONARY.utilities = (function () {
 
         var colums = [
 
@@ -20,170 +21,108 @@ jQuery(document).ready(function ($) {
             {title: 'Tipo de Trabajo', data: 'type_job', name: 'type_job'},
             {
                 mRender: function (data, type, row) {
-                    return '<a href="#" class="edit" data-id="' + row.id + '"><i class="icon-edit"></i>Edit</a>'
+                    return '<a href="#" class="edit" onclick="DICTIONARY.utilities.edit(\'' + row.id + '\')" data-id="' + row.id + '"><i class="icon-edit"></i>Edit</a>'
                 }
             }
+
         ];
+        var modalAdd = $('#modal-add');
+        var table = $('#dictionary');
 
-        DICTIONARY.interfaz.filterTable(dictionary, '/dictionaryList', 'GET', '', colums);
-
-
-        $('#filter').click(function () {
-
-            var name = $('#name').val();
-            var percentage = $('#percentage').val();
-
-            if (name == '' || percentage == '') {
-                DICTIONARY.interfaz.filterTable(dictionary, '/dictionaryList', 'GET', '', colums);
-            } else {
-                var filters = {
-                    name: $('#name').val(),
-                    percentage: $('#percentage').val()
+        return {
+            filter: function () {
+            },
+            save: function () {
+                var self = DICTIONARY.utilities;
+                var action = $('#action').val();
+                var data = {
+                    name: $('#nameForm').val(),
+                    departament: $('#departament').val(),
+                    location: $('#location').val(),
+                    municipality: $('#municipality').val(),
+                    active_years: $('#active_years').val(),
+                    person_type: $('#person_type').val(),
+                    type_job: $('#type_job').val(),
                 };
-                DICTIONARY.interfaz.filterTable(dictionary, '/dictionaryListFilter', 'GET', filters, colums);
-            }
-        });
 
-        $('#add').click(function () {
-            modal.modal('show');
-            $('#dictionary_form')[0].reset();
-            $('.modal-title').text("Agregar");
-            $('#action').val("add");
-            $('#operation').val("add");
-        });
+                if (action === 'add') {
+                    DICTIONARY.interfaz.requestApi('/api/dictionary', 'POST', data, function (response) {
+                        self.getAlert(response);
+                        if (self.canCloseModalSave(response)) {
+                            self.closeModalSave();
+                        }
+                    })
+                } else if (action === 'edit') {
+                    DICTIONARY.interfaz.requestApi('/api/dictionary/' + $('#id').val(), 'PUT', data, function (response) {
+                        self.getAlert(response);
+                        if (self.canCloseModalSave(response)) {
+                            self.closeModalSave();
+                        }
+                    })
+                }
+            },
+            getTable: function () {
+                return table;
+            },
+            getColums: function () {
+                return colums;
+            },
+            getAlert: function (response) {
+                alertify.set('notifier', 'position', 'top-right');
+                if (response.success) {
+                    alertify.success(response.message);
+                }
+                else {
+                    alertify.error(response.message);
+                }
+            },
+            edit: function (id) {
+                var self = DICTIONARY.utilities;
+                DICTIONARY.interfaz.requestApi('/api/dictionary/' + id, 'GET', '', function (data) {
+                    self.openModalSave();
+                    $('.modal-title').text("Editar");
+                    $('#action').val("edit");
+                    $('#operation').val("edit");
 
-        $(document).on('click', '.edit', function () {
+                    self.setModalSaveInputs(data.data);
+                });
+            },
+            openModalSave: function () {
+                modalAdd.modal('show');
+            },
+            canCloseModalSave: function (response) {
+                if (response.success) {
+                    return true;
+                }
+                return false;
+            },
+            closeModalSave: function () {
+                var self = DICTIONARY.utilities;
 
-            var id = $(this).attr("data-id");
-
-            DICTIONARY.interfaz.requestApi('/api/dictionary/' + id, 'GET', '', function (data) {
-                modal.modal('show');
-                $('.modal-title').text("Editar");
-                $('#action').val("edit");
-                $('#operation').val("edit");
-
-                $('#id').val(data.data.id);
-                $('#nameForm').val(data.data.name);
-                $('#departament').val(data.data.departament);
-                $('#location').val(data.data.location);
-                $('#municipality').val(data.data.municipality);
-                $('#active_years').val(data.data.active_years);
-                $('#person_type').val(data.data.person_type);
-                $('#type_job').val(data.data.type_job);
-            });
-        });
-
-        function validateResponse(response) {
-            alertify.set('notifier', 'position', 'top-right');
-
-            if (response.success) {
-
-                alertify.success(response.message);
-                $('#dictionary_form')[0].reset();
-                modal.modal('hide');
+                modalAdd.modal('hide');
+                $('#dictionarySave')[0].reset();
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
-                dictionary.DataTable().ajax.reload();
+                self.dataTableReload();
+            },
+            setModalSaveInputs: function (data) {
+                $('#id').val(data.id);
+                $('#nameForm').val(data.name);
+                $('#departament').val(data.departament);
+                $('#location').val(data.location);
+                $('#municipality').val(data.municipality);
+                $('#active_years').val(data.active_years);
+                $('#person_type').val(data.person_type);
+                $('#type_job').val(data.type_job);
+            },
+            dataTableReload: function () {
+                table.DataTable().ajax.reload();
+            },
 
-            } else {
-                alertify.error(response.message);
-            }
         }
+    })();
 
-        $(document).on('submit', '#dictionary_form', function (event) {
-            event.preventDefault();
-
-            var data = {
-                name: $('#nameForm').val(),
-                departament: $('#departament').val(),
-                location: $('#location').val(),
-                municipality: $('#municipality').val(),
-                active_years: $('#active_years').val(),
-                person_type: $('#person_type').val(),
-                type_job: $('#type_job').val(),
-            };
-
-            var action = $('#action').val();
-
-            if (action == 'add') {
-                DICTIONARY.interfaz.requestApi('/api/dictionary', 'POST', data, function (response) {
-                    validateResponse(response);
-                })
-            } else if (action == 'edit') {
-                DICTIONARY.interfaz.requestApi('/api/dictionary/' + $('#id').val(), 'PUT', data, function (response) {
-                    validateResponse(response);
-                })
-            }
-        });
-
-        $(document).on("click", "a#export", function () {
-            var _this = $(this);
-            var type = $('#export_type').val();
-            var name = $('#name').val();
-            var percentage = $('#percentage').val();
-
-            _this.text('Exportando...').prop('disabled', true);
-            $.fileDownload('/export/' + type + '/' + name + '/' + percentage, {
-                successCallback: function (url) {
-                    _this.text('Exportar').prop('disabled', false);
-                },
-                failCallback: function (responseHtml, url) {
-                    _this.text('Exportar').prop('disabled', false);
-                }
-            })
-
-            return false; //this is critical to stop the click event which will trigger a normal file download
-        });
-
-
-        $('#sendEmail').click(function () {
-            var _this = $(this);
-            var type = $('#export_type').val();
-            var name = $('#name').val();
-            var percentage = $('#percentage').val();
-            var url = '/send/' + type + '/' + name + '/' + percentage;
-
-            _this.text('enviando...');
-            _this.prop('disabled', true);
-
-            DICTIONARY.interfaz.requestApi(url, 'GET', '', function (response) {
-
-                alertify.set('notifier', 'position', 'top-right');
-                _this.text('Email').prop('disabled', false);
-
-                if (response.success) {
-                    alertify.success(response.message);
-                }
-                else {
-                    alertify.error(response.message);
-                }
-            });
-        });
-
-        $('#import').click(function () {
-            $('#modalImport').modal('show');
-        });
-
-        $("form#upload_form").submit(function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-
-            var button = $('#upload');
-            button.text('Importando...').prop('disabled', true);
-
-            DICTIONARY.interfaz.requestApi('/importFile', 'POST', formData, function (response) {
-                alertify.set('notifier', 'position', 'top-right');
-                button.text('Importar').prop('disabled', false);
-                if (response.success) {
-                    alertify.success(response.message);
-                    dictionary.DataTable().ajax.reload();
-                    $('#modalImport').modal('hide');
-                }
-                else {
-                    alertify.error(response.message);
-                }
-            })
-        });
-    }
-);
-
+    var utilities = DICTIONARY.utilities;
+    DICTIONARY.interfaz.filterTable(utilities.getTable(), 'dictionaryList', 'GET', '', utilities.getColums(), function () {
+    });
+});

@@ -3,7 +3,7 @@ var DICTIONARY = DICTIONARY || {};
 DICTIONARY.interfaz = (function () {
 
     return {
-        filterTable: function (element, url, method, data, columns) {
+        filterTable: function (element, url, method, data, columns, callback) {
             element.DataTable().destroy();
             element.removeAttr('width').DataTable({
                 "language": {
@@ -12,7 +12,11 @@ DICTIONARY.interfaz = (function () {
                 ajax: {
                     'url': url,
                     'type': method,
-                    'data': data
+                    'data': data,
+                    "dataSrc": function ( json ) {
+                        callback(json);
+                        return json.data;
+                    }
                 },
                 columns: columns,
                 scrollY: "400px",
