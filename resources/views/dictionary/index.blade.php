@@ -1,42 +1,4 @@
 @extends('layouts.app')
-<style>
-    /* Ensure that the demo table scrolls */
-    th, td {
-        white-space: nowrap;
-        font-size: 12px;
-
-    }
-
-    div.table-responsive {
-        margin: 0 auto;
-    }
-
-    div.container {
-        width: 80%;
-    }
-
-    div#formFilter {
-        margin-left: 10px;
-    }
-
-    div#dictionary_filter {
-        margin-right: 15px;
-    }
-
-    div#dictionary_length {
-        margin-left: 20px;
-    }
-
-    .card {
-        background-color: #f1f1f1 !important;
-    }
-
-    button#add {
-        margin-right: 14px;
-    }
-
-</style>
-
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -61,7 +23,9 @@
                                 </div>
                                 <div class="form-group">
                                     <br>
-                                    <button type="button" name="filter" id="filter" class="btn btn-success">Buscar
+                                    <button type="button" name="filter" id="filter" class="btn btn-success"
+                                            onclick="DICTIONARY.main.search()">
+                                        Buscar
                                     </button>
                                 </div>
                             </div>
@@ -69,31 +33,32 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-md-2">
-                            <select class="form-control float-right" name="export_type" id="export_type">
+                        <div class="col-md-6">
+                            <select class="form-control" name="export_type" id="export_type">
                                 <option value="excel">Excel</option>
                                 <option value="pdf">Pdf</option>
                             </select>
-                        </div>
-                        <div class="col-md-4" id="reports">
-                            <a href="#" class="btn btn-info" id="export">
+                            <button class="btn btn-dark" id="export" onclick="DICTIONARY.main.fileExport()">
                                 Exportar
-                            </a>
-                            <button type="button" class="btn btn-info" id="sendEmail">
-                                Email
+                            </button>
+                            <button class="btn btn-dark" id="sendEmail" onclick="DICTIONARY.main.sendFileEmail()">
+                                Enviar al correo
                             </button>
                         </div>
                         <div class="col-md-6">
 
-                            <button type="button" class="btn btn-primary float-right" id="add">
+                            <button class="btn btn-primary float-right" id="add"
+                                    onclick="DICTIONARY.main.openModalSave()">
                                 Nuevo
                             </button>
-                            <button type="button" class="btn btn-secondary float-right" id="import">
+                            <button class="btn btn-secondary float-right" id="import"
+                                    onclick="DICTIONARY.main.openModalImport()">
                                 Importar
                             </button>
                         </div>
 
                     </div>
+                    <hr>
                     <br>
                     <div id="table">
                         <div class="table-responsive">
@@ -114,7 +79,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

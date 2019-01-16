@@ -1,0 +1,40 @@
+th, td {
+    white-space: nowrap;
+    font-size: 12px;
+
+}
+
+div.table-responsive {
+    margin: 0 auto;
+}
+
+div.container {
+    width: 80%;
+}
+
+div#formFilter {
+    margin-left: 10px;
+}
+
+div#dictionary_filter {
+    margin-right: 15px;
+}
+
+div#dictionary_length {
+    margin-left: 20px;
+}
+
+.card {
+    background-color: #f1f1f1 !important;
+}
+
+button#add {
+    margin-right: 14px;
+}
+
+select#export_type {
+    width: 90px;
+    margin-left: 20px;
+    float: left;
+    margin-right: 5px;
+}

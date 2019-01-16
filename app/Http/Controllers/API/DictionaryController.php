@@ -52,7 +52,7 @@ class DictionaryController extends BaseController
 
         $validator = Validator::make($input, [
             'name' => 'required',
-            'percentage' => 'required|integer',
+            'percentage' => 'required|integer|digits_between:0,100',
         ]);
 
         if ($validator->fails()) {

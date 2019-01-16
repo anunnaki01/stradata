@@ -21,6 +21,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/dictionary/style.css') }}" rel="stylesheet">
 
     <!-- DataTable -->
     {{--<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">--}}
@@ -44,8 +45,13 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-    <script src="{{ asset('js/dictionary.js') }}" defer></script>
-    <script src="{{ asset('js/datatable.js') }}" defer></script>
+    <!-- dictionary files section -->
+    <script src="{{ asset('js/dictionary/requestApi.js') }}" defer></script>
+    <script src="{{ asset('js/dictionary/dataTable.js') }}" defer></script>
+    <script src="{{ asset('js/dictionary/utilities.js') }}" defer></script>
+    <script src="{{ asset('js/dictionary/modal.js') }}" defer></script>
+    <script src="{{ asset('js/dictionary/main.js') }}" defer></script>
+
     <script src="{{ asset('js/app.js') }}" defer></script>
 
 
