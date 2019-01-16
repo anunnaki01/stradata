@@ -31,16 +31,6 @@ DICTIONARY.utilities = (function () {
                 DICTIONARY.dataTable.reload(table);
             }
             return false;
-        },
-        fileDownload: function (url, callback) {
-            $.fileDownload(url, {
-                successCallback: function (url) {
-                    callback(url);
-                },
-                failCallback: function (responseHtml, url) {
-                    callback(responseHtml);
-                }
-            });
         }
     }
 })();
