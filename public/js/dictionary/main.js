@@ -15,7 +15,6 @@ jQuery(document).ready(function ($) {
         return {
             loadTable: function () {
                 DICTIONARY.dataTable.load(table, 'dictionaryList', 'GET', '', function (data) {
-                    console.log(data);
                 });
                 return false;
             },
@@ -102,11 +101,21 @@ jQuery(document).ready(function ($) {
 
                 buttonExport.text('Exportando...').prop('disabled', true);
 
-                DICTIONARY.utilities.fileDownload(url, function () {
+                DICTIONARY.main.fileDownload(url, function () {
                     buttonExport.text('Exportar').prop('disabled', false);
                 });
 
                 return false;
+            },
+            fileDownload: function (url, callback) {
+                $.fileDownload(url, {
+                    successCallback: function (url) {
+                        callback(url);
+                    },
+                    failCallback: function (responseHtml, url) {
+                        callback(responseHtml);
+                    }
+                });
             },
             fileImport: function () {
 
