@@ -13,8 +13,12 @@ class ImportController extends BaseController
     {
         $file = $request->file;
 
+        if(empty($file)){
+            return $this->sendError('Archivo no definido...', [], 200);
+        }
+
         if (!in_array($file->extension(), ['txt', 'csv', 'xls', 'xlsx'])) {
-            return $this->sendError('Archivo no valido', [], 200);
+            return $this->sendError('Archivo no valido...', [], 200);
         }
 
         \Excel::load($file, function ($reader) {

@@ -70,7 +70,7 @@
                         <input type="hidden" name="operation" id="operation">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="action" value="add"
-                                onclick="DICTIONARY.utilities.save()">Guardar
+                                onclick="DICTIONARY.main.save()">Guardar
                         </button>
                     </div>
                 </form>

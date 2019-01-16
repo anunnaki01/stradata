@@ -9,17 +9,17 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" id="upload_form" enctype="multipart/form-data">
+                <form method="post" id="importFile" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <input id="file" type="file" name="file"/>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="upload">Importar</button>
+                        <button type="button" class="btn btn-primary" id="upload"
+                                onclick="DICTIONARY.main.fileImport()">Importar
+                        </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
-
             </div>
-
         </div>
     </div>
 </div>
