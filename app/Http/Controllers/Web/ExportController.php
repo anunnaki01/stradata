@@ -52,7 +52,7 @@ class ExportController extends BaseController
             return $this->sendError('Tipo de exportacion no especificada.', $validator->errors(), 200);
         }
 
-        if (!empty($input['name']) && !empty($input['percentage'])) {
+        if (!empty($input['name']) && isset($input['percentage']) && $input['percentage'] !== '') {
             $data = $this->filter->filter($input);
         } else {
             $data = $this->filter->all();

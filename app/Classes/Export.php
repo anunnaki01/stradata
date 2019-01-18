@@ -13,9 +13,16 @@ use PDF;
 
 class Export
 {
-    public function excel(array $data, $fileName)
+    public function __construct()
     {
         header('Set-Cookie: fileDownload=true; path=/');
+        set_time_limit(0);
+        ini_set("memory_limit", -1);
+        ini_set('max_execution_time', 0);
+    }
+
+    public function excel(array $data, $fileName)
+    {
 
         return $this->getExcelFile($data, $fileName)->export('xls');
     }
@@ -32,9 +39,6 @@ class Export
 
     public function pdf($data, $fileName)
     {
-        ini_set('max_execution_time', 0);
-        set_time_limit(0);
-
         $pdf = PDF::loadView('pdf.export', compact('data'));
         //$pdf->save(storage_path().'/' . $fileName . '.pdf');
         $pdf->setPaper('A4', 'landscape');
