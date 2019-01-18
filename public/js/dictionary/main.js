@@ -67,8 +67,13 @@ jQuery(document).ready(function ($) {
 
                 buttonSearch.text('Buscando...').prop('disabled', true);
 
+                var dataTableId = $('#table');
+                dataTableId.hide()
+
+
                 if (name === '' || percentage === '') {
                     DICTIONARY.dataTable.load(table, '/dictionaryList', 'GET', '', function (response) {
+                        dataTableId.show();
                         DICTIONARY.utilities.getAlert(response);
                         buttonSearch.text('Buscar').prop('disabled', false);
                     });
@@ -85,7 +90,9 @@ jQuery(document).ready(function ($) {
 
                 var filters = {name: name, percentage: percentage};
 
+
                 DICTIONARY.dataTable.load(table, '/dictionaryListFilter', 'GET', filters, function (response) {
+                    dataTableId.show();
                     DICTIONARY.utilities.getAlert(response);
                     buttonSearch.text('Buscar').prop('disabled', false);
                 });
